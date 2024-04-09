@@ -8,3 +8,4 @@ pub mod menu;
 pub mod none;
 pub mod regions;
 pub mod stats;
+pub mod replacer;

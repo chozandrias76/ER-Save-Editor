@@ -145,7 +145,7 @@ impl eframe::App for App {
         egui::TopBottomPanel::top("toolbar")
             .default_height(35.)
             .show(ctx, |ui| {
-                ui.columns(2, |uis| {
+                ui.columns(3, |uis| {
                     uis[0].with_layout(Layout::left_to_right(Align::Center), |ui| {
                         if ui
                             .button(egui::RichText::new(format!(
@@ -175,7 +175,24 @@ impl eframe::App for App {
                         }
                     });
 
-                    uis[1].with_layout(Layout::right_to_left(egui::Align::Center), |ui| {
+                    uis[1].with_layout(Layout::centered_and_justified(egui::Direction::TopDown), |ui| {
+                        let import_button =
+                            egui::widgets::Button::new(
+                                egui::RichText::new(format!(
+                                    "{} Replace Character using JSON",
+                                    egui_phosphor::regular::ARROWS_MERGE
+                                ))
+                            );
+
+                        if ui
+                            .add_enabled(!self.vm.steam_id.is_empty(), import_button)
+                            .clicked()
+                        {
+                            ui::replacer::replacer::Replacer::open_file_dialog();
+                        }
+                    });
+
+                    uis[2].with_layout(Layout::right_to_left(egui::Align::Center), |ui| {
                         let import_button =
                             egui::widgets::Button::new(egui::RichText::new(format!(
                                 "{} Import Character",

@@ -1,0 +1,2 @@
+[build]
+jobs = 4 # Set to the number of CPU cores on your machine
