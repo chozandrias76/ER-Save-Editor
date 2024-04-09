@@ -31,7 +31,7 @@ use ui::{
     regions::regions::regions,
     stats::stats::stats,
 };
-use vm::{importer::general_view_model::ImporterViewModel, vm::vm::ViewModel};
+use vm::{importer::general_view_model::ImporterViewModel, replacer::general_view_model::ReplacerViewModel, vm::vm::ViewModel};
 
 #[derive(RustEmbed)]
 #[folder = "icon/"]
@@ -87,6 +87,8 @@ pub struct App {
     current_route: Route,
     importer_vm: ImporterViewModel,
     importer_open: bool,
+    replacer_vm: ReplacerViewModel,
+    replacer_open: bool,
 }
 
 impl App {
@@ -98,6 +100,8 @@ impl App {
             vm: ViewModel::default(),
             importer_vm: Default::default(),
             importer_open: Default::default(),
+            replacer_vm: Default::default(),
+            replacer_open: Default::default(),
         }
     }
 
@@ -145,7 +149,7 @@ impl eframe::App for App {
         egui::TopBottomPanel::top("toolbar")
             .default_height(35.)
             .show(ctx, |ui| {
-                ui.columns(2, |uis| {
+                ui.columns(3, |uis| {
                     uis[0].with_layout(Layout::left_to_right(Align::Center), |ui| {
                         if ui
                             .button(egui::RichText::new(format!(
@@ -175,7 +179,12 @@ impl eframe::App for App {
                         }
                     });
 
-                    uis[1].with_layout(Layout::right_to_left(egui::Align::Center), |ui| {
+                    uis[1].with_layout(Layout::centered_and_justified(egui::Direction::TopDown), |ui| {
+                        #[cfg(debug_assertions)]
+                        ui::replacer::replacer::layout(ui, self);
+                    });
+
+                    uis[2].with_layout(Layout::right_to_left(egui::Align::Center), |ui| {
                         let import_button =
                             egui::widgets::Button::new(egui::RichText::new(format!(
                                 "{} Import Character",
@@ -221,6 +230,9 @@ impl eframe::App for App {
                     SaveType::PlayStation(_) => {
                         "Platform: Playstation"
                     },
+                    SaveType::Nya(_) => {
+                        todo!()
+                    }
                 };
 
                 ui.columns(2,| uis| {
@@ -243,6 +255,9 @@ impl eframe::App for App {
                                         }
                                     },
                                     SaveType::PlayStation(_) => {},
+                                    SaveType::Nya(_) => {
+                                        todo!()
+                                    }
                                 };
                             });
                         });
