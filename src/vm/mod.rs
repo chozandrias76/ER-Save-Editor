@@ -9,3 +9,4 @@ pub mod regulation;
 mod slot;
 pub mod stats;
 pub mod vm;
+pub mod replacer;

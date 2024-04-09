@@ -31,7 +31,7 @@ use ui::{
     regions::regions::regions,
     stats::stats::stats,
 };
-use vm::{importer::general_view_model::ImporterViewModel, vm::vm::ViewModel};
+use vm::{importer::general_view_model::ImporterViewModel, replacer::general_view_model::ReplacerViewModel, vm::vm::ViewModel};
 
 #[derive(RustEmbed)]
 #[folder = "icon/"]
@@ -87,6 +87,8 @@ pub struct App {
     current_route: Route,
     importer_vm: ImporterViewModel,
     importer_open: bool,
+    replacer_vm: ReplacerViewModel,
+    replacer_open: bool,
 }
 
 impl App {
@@ -98,6 +100,8 @@ impl App {
             vm: ViewModel::default(),
             importer_vm: Default::default(),
             importer_open: Default::default(),
+            replacer_vm: Default::default(),
+            replacer_open: Default::default(),
         }
     }
 
@@ -176,20 +180,8 @@ impl eframe::App for App {
                     });
 
                     uis[1].with_layout(Layout::centered_and_justified(egui::Direction::TopDown), |ui| {
-                        let import_button =
-                            egui::widgets::Button::new(
-                                egui::RichText::new(format!(
-                                    "{} Replace Character using JSON",
-                                    egui_phosphor::regular::ARROWS_MERGE
-                                ))
-                            );
-
-                        if ui
-                            .add_enabled(!self.vm.steam_id.is_empty(), import_button)
-                            .clicked()
-                        {
-                            ui::replacer::replacer::Replacer::open_file_dialog();
-                        }
+                        #[cfg(debug_assertions)]
+                        ui::replacer::replacer::layout(ui, self);
                     });
 
                     uis[2].with_layout(Layout::right_to_left(egui::Align::Center), |ui| {
@@ -238,6 +230,9 @@ impl eframe::App for App {
                     SaveType::PlayStation(_) => {
                         "Platform: Playstation"
                     },
+                    SaveType::Nya(_) => {
+                        todo!()
+                    }
                 };
 
                 ui.columns(2,| uis| {
@@ -260,6 +255,9 @@ impl eframe::App for App {
                                         }
                                     },
                                     SaveType::PlayStation(_) => {},
+                                    SaveType::Nya(_) => {
+                                        todo!()
+                                    }
                                 };
                             });
                         });
