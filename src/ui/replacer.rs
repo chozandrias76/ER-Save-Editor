@@ -29,35 +29,37 @@ pub mod replacer {
 
     #[cfg(debug_assertions)]
     pub fn layout(ui: &mut eframe::egui::Ui, app: &mut crate::App) {
-      let import_button =
-        egui::widgets::Button::new(
-            egui::RichText::new(format!(
-                "{} Replace Character using JSON",
-                egui_phosphor::regular::ARROWS_MERGE
-            ))
-        );
+        use crate::save::nya::nya_save::NyaSave;
 
-    if ui
-        .add_enabled(!app.vm.steam_id.is_empty(), import_button)
-        .clicked()
-    {
-        crate::ui::replacer::replacer::Replacer::open_file_dialog();
+        let import_button = egui::widgets::Button::new(egui::RichText::new(format!(
+            "{} Replace Character using JSON",
+            egui_phosphor::regular::ARROWS_MERGE
+        )));
 
-        
-        let nya_save = crate::save::nya::nya_save::NyaSave {
-            save_slots: [crate::save::nya::save_slot::NyaSaveSlot::default(); 1]
-        };
-        let save = crate::save::save::save::Save::from_nya_save(&nya_save).expect("data");
-        app.replacer_vm = crate::vm::replacer::general_view_model::ReplacerViewModel::new(save, &app.vm);
-        app.replacer_open = true;
+        if ui
+            .add_enabled(!app.vm.steam_id.is_empty(), import_button)
+            .clicked()
+        {
+            let files = crate::ui::replacer::replacer::Replacer::open_file_dialog();
+            match files {
+                Some(path) => match NyaSave::from_path(&path) {
+                    Ok(nya_save) => {
+                        app.replacer_vm =
+                            crate::vm::replacer::general_view_model::ReplacerViewModel::new(nya_save, &app.vm);
+                        app.replacer_open = true;
+                    }
+                    Err(_) => {}
+                },
+                None => {}
+            }
+        }
         crate::ui::replacer::replacer::character_replacer(
             ui,
             &mut app.replacer_open,
             &mut app.replacer_vm,
             &mut app.save,
-            &mut app.vm
+            &mut app.vm,
         )
-      }
     }
 
     pub fn character_replacer(
@@ -119,8 +121,8 @@ pub mod replacer {
                         )
                         .clicked()
                     {
-                      println!("clicked!");
-                        // replacer_vm.import_character(to_save, vm);
+                        println!("clicked!");
+                        replacer_vm.import_character(to_save, vm);
                     }
                 });
             });

@@ -8,7 +8,9 @@ pub mod save {
                 },
                 user_data_10::ProfileSummary,
                 user_data_11::UserData11,
-            }, nya::nya_save::NyaSave, pc::pc_save::PCSave, playstation::ps_save::PSSave
+            },
+            pc::pc_save::PCSave,
+            playstation::ps_save::PSSave,
         },
         util::bit::bit::set_bit,
         write::write::Write,
@@ -26,7 +28,6 @@ pub mod save {
         Unknown,
         PC(PCSave),
         PlayStation(PSSave),
-        Nya(NyaSave)
     }
 
     #[allow(unused)]
@@ -36,7 +37,6 @@ pub mod save {
                 SaveType::Unknown => todo!(),
                 SaveType::PC(pc_save) => pc_save.user_data_10.steam_id,
                 SaveType::PlayStation(_) => 0,
-                SaveType::Nya(nya_save) => 0
             }
         }
 
@@ -48,8 +48,7 @@ pub mod save {
                 }
                 SaveType::PlayStation(ps_save) => {
                     ps_save.user_data_10.steam_id = 0;
-                },
-                SaveType::Nya(_) => todo!(),
+                }
             }
         }
 
@@ -58,7 +57,6 @@ pub mod save {
                 SaveType::Unknown => panic!("Why are we here?"),
                 SaveType::PC(pc_save) => pc_save.user_data_10.active_slot,
                 SaveType::PlayStation(ps_save) => ps_save.user_data_10.active_slot,
-                SaveType::Nya(_) => todo!(),
             }
         }
 
@@ -67,7 +65,6 @@ pub mod save {
                 SaveType::Unknown => panic!("Why are we here?"),
                 SaveType::PC(pc_save) => pc_save.save_slots[index].save_slot.steam_id,
                 SaveType::PlayStation(_) => 0,
-                SaveType::Nya(_) => todo!(),
             }
         }
 
@@ -79,8 +76,7 @@ pub mod save {
                 }
                 SaveType::PlayStation(ps_save) => {
                     ps_save.save_slots[index].steam_id = 0;
-                },
-                SaveType::Nya(_) => todo!(),
+                }
             }
         }
 
@@ -111,8 +107,7 @@ pub mod save {
                     ps_save.user_data_10.profile_summary[index]
                         .character_name
                         .copy_from_slice(&character_name2);
-                },
-                SaveType::Nya(_) => todo!(),
+                }
             }
         }
 
@@ -124,8 +119,7 @@ pub mod save {
                 }
                 SaveType::PlayStation(ps_save) => {
                     ps_save.save_slots[index].player_game_data.gender = gender;
-                },
-                SaveType::Nya(_) => todo!(),
+                }
             }
         }
 
@@ -137,8 +131,7 @@ pub mod save {
                 }
                 SaveType::PlayStation(ps_save) => {
                     ps_save.save_slots[index].player_game_data.health = health;
-                },
-                SaveType::Nya(_) => todo!(),
+                }
             }
         }
 
@@ -153,8 +146,7 @@ pub mod save {
                 }
                 SaveType::PlayStation(ps_save) => {
                     ps_save.save_slots[index].player_game_data.base_max_health = base_max_health;
-                },
-                SaveType::Nya(_) => todo!(),
+                }
             }
         }
 
@@ -166,8 +158,7 @@ pub mod save {
                 }
                 SaveType::PlayStation(ps_save) => {
                     ps_save.save_slots[index].player_game_data.fp = fp;
-                },
-                SaveType::Nya(_) => todo!(),
+                }
             }
         }
 
@@ -182,8 +173,7 @@ pub mod save {
                 }
                 SaveType::PlayStation(ps_save) => {
                     ps_save.save_slots[index].player_game_data.base_max_fp = base_max_fp;
-                },
-                SaveType::Nya(_) => todo!(),
+                }
             }
         }
 
@@ -195,8 +185,7 @@ pub mod save {
                 }
                 SaveType::PlayStation(ps_save) => {
                     ps_save.save_slots[index].player_game_data.sp = sp;
-                },
-                SaveType::Nya(_) => todo!(),
+                }
             }
         }
 
@@ -211,8 +200,7 @@ pub mod save {
                 }
                 SaveType::PlayStation(ps_save) => {
                     ps_save.save_slots[index].player_game_data.base_max_sp = base_max_sp;
-                },
-                SaveType::Nya(_) => todo!(),
+                }
             }
         }
 
@@ -225,8 +213,7 @@ pub mod save {
                 }
                 SaveType::PlayStation(ps_save) => {
                     ps_save.save_slots[index].player_game_data.level = level;
-                },
-                SaveType::Nya(_) => todo!(),
+                }
             }
         }
 
@@ -238,8 +225,7 @@ pub mod save {
                 }
                 SaveType::PlayStation(ps_save) => {
                     ps_save.save_slots[index].player_game_data.vigor = vigor;
-                },
-                SaveType::Nya(_) => todo!(),
+                }
             }
         }
 
@@ -251,8 +237,7 @@ pub mod save {
                 }
                 SaveType::PlayStation(ps_save) => {
                     ps_save.save_slots[index].player_game_data.mind = mind;
-                },
-                SaveType::Nya(_) => todo!(),
+                }
             }
         }
 
@@ -267,8 +252,7 @@ pub mod save {
                 }
                 SaveType::PlayStation(ps_save) => {
                     ps_save.save_slots[index].player_game_data.endurance = endurance;
-                },
-                SaveType::Nya(_) => todo!(),
+                }
             }
         }
 
@@ -283,8 +267,7 @@ pub mod save {
                 }
                 SaveType::PlayStation(ps_save) => {
                     ps_save.save_slots[index].player_game_data.strength = strength;
-                },
-                SaveType::Nya(_) => todo!(),
+                }
             }
         }
 
@@ -299,8 +282,7 @@ pub mod save {
                 }
                 SaveType::PlayStation(ps_save) => {
                     ps_save.save_slots[index].player_game_data.dexterity = dexterity;
-                },
-                SaveType::Nya(_) => todo!(),
+                }
             }
         }
 
@@ -315,8 +297,7 @@ pub mod save {
                 }
                 SaveType::PlayStation(ps_save) => {
                     ps_save.save_slots[index].player_game_data.intelligence = intelligence;
-                },
-                SaveType::Nya(_) => todo!(),
+                }
             }
         }
 
@@ -328,8 +309,7 @@ pub mod save {
                 }
                 SaveType::PlayStation(ps_save) => {
                     ps_save.save_slots[index].player_game_data.faith = faith;
-                },
-                SaveType::Nya(_) => todo!(),
+                }
             }
         }
 
@@ -341,8 +321,7 @@ pub mod save {
                 }
                 SaveType::PlayStation(ps_save) => {
                     ps_save.save_slots[index].player_game_data.arcane = arcane;
-                },
-                SaveType::Nya(_) => todo!(),
+                }
             }
         }
 
@@ -375,8 +354,7 @@ pub mod save {
                         ps_save.save_slots[index].player_game_data.soulsmemory =
                             orgininal_soulsmemory + souls;
                     }
-                },
-                SaveType::Nya(_) => todo!(),
+                }
             }
         }
 
@@ -398,8 +376,7 @@ pub mod save {
                     let event_byte = ps_save.save_slots[index].event_flags.flags[offset];
                     ps_save.save_slots[index].event_flags.flags[offset] =
                         set_bit(event_byte, bit_pos, state);
-                },
-                SaveType::Nya(_) => todo!(),
+                }
             }
         }
 
@@ -449,8 +426,7 @@ pub mod save {
                                 ps_save.save_slots[index].regions.unlocked_regions_count + 1;
                         }
                     }
-                },
-                SaveType::Nya(_) => todo!(),
+                }
             }
         }
 
@@ -500,8 +476,7 @@ pub mod save {
                         }
                         None => {}
                     }
-                },
-                SaveType::Nya(_) => todo!(),
+                }
             }
         }
 
@@ -510,7 +485,6 @@ pub mod save {
                 SaveType::Unknown => panic!("Why are we here?"),
                 SaveType::PC(pc_save) => pc_save.user_data_10.profile_summary[index],
                 SaveType::PlayStation(ps_save) => ps_save.user_data_10.profile_summary[index],
-                SaveType::Nya(_) => todo!(),
             }
         }
 
@@ -522,8 +496,7 @@ pub mod save {
                 }
                 SaveType::PlayStation(ps_save) => {
                     ps_save.user_data_10.profile_summary[index] = profile_summary
-                },
-                SaveType::Nya(_) => todo!(),
+                }
             }
         }
 
@@ -532,7 +505,6 @@ pub mod save {
                 SaveType::Unknown => panic!("Why are we here?"),
                 SaveType::PC(pc_save) => &pc_save.save_slots[index].save_slot,
                 SaveType::PlayStation(ps_save) => &ps_save.save_slots[index],
-                SaveType::Nya(_) => todo!(),
             }
         }
 
@@ -541,7 +513,6 @@ pub mod save {
                 SaveType::Unknown => panic!("Why are we here?"),
                 SaveType::PC(pc_save) => pc_save.save_slots[index].save_slot = save_slot.clone(),
                 SaveType::PlayStation(ps_save) => ps_save.save_slots[index] = save_slot.clone(),
-                SaveType::Nya(_) => todo!(),
             }
         }
 
@@ -550,7 +521,6 @@ pub mod save {
                 SaveType::Unknown => panic!("Why are we here?"),
                 SaveType::PC(pc_save) => &pc_save.user_data_11.user_data_11,
                 SaveType::PlayStation(ps_save) => &ps_save.user_data_11,
-                SaveType::Nya(_) => todo!(),
             }
         }
 
@@ -559,7 +529,6 @@ pub mod save {
                 SaveType::Unknown => panic!("Why are we here?"),
                 SaveType::PC(pc_save) => &pc_save.user_data_11.user_data_11.regulation,
                 SaveType::PlayStation(ps_save) => &ps_save.user_data_11.regulation,
-                SaveType::Nya(_) => todo!(),
             }
         }
 
@@ -571,8 +540,7 @@ pub mod save {
                 }
                 SaveType::PlayStation(ps_save) => {
                     ps_save.save_slots[index].ga_items = ga_items;
-                },
-                SaveType::Nya(_) => todo!(),
+                }
             }
         }
 
@@ -584,8 +552,7 @@ pub mod save {
                 }
                 SaveType::PlayStation(ps_save) => {
                     ps_save.save_slots[index].equip_inventory_data = held_inventory;
-                },
-                SaveType::Nya(_) => todo!(),
+                }
             }
         }
 
@@ -602,8 +569,7 @@ pub mod save {
                 }
                 SaveType::PlayStation(ps_save) => {
                     ps_save.save_slots[index].storage_inventory_data = storage_box_inventory;
-                },
-                SaveType::Nya(_) => todo!(),
+                }
             }
         }
 
@@ -615,8 +581,7 @@ pub mod save {
                 }
                 SaveType::PlayStation(ps_save) => {
                     ps_save.save_slots[index].ga_item_data = gaitem_data;
-                },
-                SaveType::Nya(_) => todo!(),
+                }
             }
         }
 
@@ -657,8 +622,7 @@ pub mod save {
                         .equip_item_data
                         .quick_slot_items[quickslot_index]
                         .equipment_index = equip_index;
-                },
-                SaveType::Nya(_) => todo!(),
+                }
             }
         }
 
@@ -694,8 +658,7 @@ pub mod save {
                         .item_id = gaitem_handle;
                     ps_save.save_slots[slot_index].equip_item_data.pouch_items[pouch_index]
                         .equipment_index = equip_index;
-                },
-                SaveType::Nya(_) => todo!(),
+                }
             }
         }
 
@@ -730,8 +693,7 @@ pub mod save {
                     profile_summary.equipment_gaitem.left_hand_armaments[weapon_slot_index] =
                         gaitem_handle;
                     profile_summary.equipment_item.left_hand_armaments[weapon_slot_index] = item_id;
-                },
-                SaveType::Nya(_) => todo!(),
+                }
             }
         }
 
@@ -768,8 +730,7 @@ pub mod save {
                         gaitem_handle;
                     profile_summary.equipment_item.right_hand_armaments[weapon_slot_index] =
                         item_id;
-                },
-                SaveType::Nya(_) => todo!(),
+                }
             }
         }
 
@@ -806,8 +767,7 @@ pub mod save {
                         if item_id == 0 { u32::MAX } else { item_id };
                     profile_summary.equipment_gaitem.arrows[weapon_slot_index] = gaitem_handle;
                     profile_summary.equipment_item.arrows[weapon_slot_index] = item_id;
-                },
-                SaveType::Nya(_) => todo!(),
+                }
             }
         }
 
@@ -844,8 +804,7 @@ pub mod save {
                         if item_id == 0 { u32::MAX } else { item_id };
                     profile_summary.equipment_gaitem.bolts[weapon_slot_index] = gaitem_handle;
                     profile_summary.equipment_item.bolts[weapon_slot_index] = item_id;
-                },
-                SaveType::Nya(_) => todo!(),
+                }
             }
         }
 
@@ -880,8 +839,7 @@ pub mod save {
                     profile_summary.equipment_gaitem.talismans[weapon_slot_index] = gaitem_handle;
                     profile_summary.equipment_item.talismans[weapon_slot_index] =
                         item_id | 0x20000000;
-                },
-                SaveType::Nya(_) => todo!(),
+                }
             }
         }
 
@@ -913,8 +871,7 @@ pub mod save {
                     slot.equipped_items.head = item_id | 0x10000000;
                     profile_summary.equipment_gaitem.head = gaitem_handle;
                     profile_summary.equipment_item.head = item_id | 0x10000000;
-                },
-                SaveType::Nya(_) => todo!(),
+                }
             }
         }
 
@@ -946,8 +903,7 @@ pub mod save {
                     slot.equipped_items.chest = item_id | 0x10000000;
                     profile_summary.equipment_gaitem.chest = gaitem_handle;
                     profile_summary.equipment_item.chest = item_id | 0x10000000;
-                },
-                SaveType::Nya(_) => todo!(),
+                }
             }
         }
 
@@ -979,8 +935,7 @@ pub mod save {
                     slot.equipped_items.arms = item_id | 0x10000000;
                     profile_summary.equipment_gaitem.arms = gaitem_handle;
                     profile_summary.equipment_item.arms = item_id | 0x10000000;
-                },
-                SaveType::Nya(_) => todo!(),
+                }
             }
         }
 
@@ -1012,8 +967,7 @@ pub mod save {
                     slot.equipped_items.legs = item_id | 0x10000000;
                     profile_summary.equipment_gaitem.legs = gaitem_handle;
                     profile_summary.equipment_item.legs = item_id | 0x10000000;
-                },
-                SaveType::Nya(_) => todo!(),
+                }
             }
         }
 
@@ -1030,8 +984,7 @@ pub mod save {
                 }
                 SaveType::PlayStation(ps_save) => {
                     ps_save.save_slots[index].equip_projectile_data = projectile_list.clone();
-                },
-                SaveType::Nya(_) => todo!(),
+                }
             }
         }
 
@@ -1048,8 +1001,7 @@ pub mod save {
                     ps_save.save_slots[index]
                         .player_game_data
                         .match_making_wpn_lvl = weapon_level;
-                },
-                SaveType::Nya(_) => todo!(),
+                }
             }
         }
     }
@@ -1091,20 +1043,12 @@ pub mod save {
                 SaveType::Unknown => Vec::new(),
                 SaveType::PC(pc_save) => pc_save.write()?,
                 SaveType::PlayStation(ps_save) => ps_save.write()?,
-                SaveType::Nya(_) => todo!(),
             };
             Ok(save_bytes)
         }
     }
 
     impl Save {
-        pub fn from_nya_save(nya_save: &NyaSave) -> Result<Save, io::Error> {
-            let mut save = Save::default();
-            save.save_type = SaveType::Nya(nya_save.clone());
-
-            Ok(save)
-        }
-    
         pub fn from_path(path: &PathBuf) -> Result<Save, io::Error> {
             let contents = fs::read(path).expect("Should have been able to read the file");
             let mut br = BinaryReader::from_u8(&contents);

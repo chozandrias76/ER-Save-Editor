@@ -229,9 +229,6 @@ impl eframe::App for App {
                     }
                     SaveType::PlayStation(_) => {
                         "Platform: Playstation"
-                    },
-                    SaveType::Nya(_) => {
-                        todo!()
                     }
                 };
 
@@ -255,9 +252,6 @@ impl eframe::App for App {
                                         }
                                     },
                                     SaveType::PlayStation(_) => {},
-                                    SaveType::Nya(_) => {
-                                        todo!()
-                                    }
                                 };
                             });
                         });
