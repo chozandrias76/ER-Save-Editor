@@ -47,20 +47,19 @@ pub mod replacer {
                         app.replacer_vm =
                             crate::vm::replacer::general_view_model::ReplacerViewModel::new(nya_save, &app.vm);
                         app.replacer_open = true;
-
-                        crate::ui::replacer::replacer::character_replacer(
-                            ui,
-                            &mut true,
-                            &mut app.replacer_vm,
-                            &mut app.save,
-                            &mut app.vm,
-                        )
                     }
                     Err(_) => {}
                 },
                 None => {}
             }
         }
+        crate::ui::replacer::replacer::character_replacer(
+            ui,
+            &mut app.replacer_open,
+            &mut app.replacer_vm,
+            &mut app.save,
+            &mut app.vm,
+        )
     }
 
     pub fn character_replacer(
