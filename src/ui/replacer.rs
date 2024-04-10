@@ -121,7 +121,6 @@ pub mod replacer {
                         )
                         .clicked()
                     {
-                        println!("clicked!");
                         replacer_vm.import_character(to_save, vm);
                     }
                 });

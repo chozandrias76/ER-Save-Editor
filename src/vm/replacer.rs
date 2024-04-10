@@ -33,43 +33,32 @@ pub mod general_view_model {
 
             replacer_view_model.from_save = nya_save;
 
-            let character_name: String = replacer_view_model.from_save.name.clone();
-            replacer_view_model.from_list[0].active = true;
-            replacer_view_model.from_list[0].index = 0;
-            replacer_view_model.from_list[0].name = character_name;
-
-            for i in 0..0xA {
-                if vm.profile_summary[i].active {
-                    replacer_view_model.to_list[i].active = true;
-                    replacer_view_model.to_list[i].index = i;
-                    replacer_view_model.to_list[i].name =
-                        vm.slots[i].general_vm.character_name.to_string();
-                }
-            }
+            replacer_view_model.replace_name();
+            replacer_view_model.update_to_list(&vm);
+            
 
             replacer_view_model
         }
 
+        fn replace_name(&mut self) {
+            let character_name: String = self.from_save.name.clone();
+            self.from_list[0].active = true;
+            self.from_list[0].index = 0;
+            self.from_list[0].name = character_name;
+        }
+
+        fn update_to_list(&mut self, vm: &ViewModel) {
+            for i in 0..0xA {
+                if vm.profile_summary[i].active {
+                    self.to_list[i].active = true;
+                    self.to_list[i].index = i;
+                    self.to_list[i].name =
+                        vm.slots[i].general_vm.character_name.to_string();
+                }
+            }
+        }
+
         pub fn import_character(&mut self, to_save: &mut Save, vm: &mut ViewModel) {
-            // Retain slot version
-            // let mut from_slot = self
-            //     .from_save;
-            // let to_slot = to_save.save_type.get_slot(self.selected_to_index);
-            // from_slot.ver = to_slot.ver;
-
-            // // Save Slot
-            // to_save
-            //     .save_type
-            //     .set_slot(self.selected_to_index, &from_slot);
-
-            // // Profile Summary
-            // to_save.save_type.set_profile_summary(
-            //     self.selected_to_index,
-            //     self.from_save
-            //         .save_type
-            //         .get_profile_summary(self.selected_from_index),
-            // );
-
             // Refresh view model
             vm.slots[self.selected_to_index] =
                 crate::vm::slot::slot_view_model::SlotViewModel::from_save(
