@@ -1,12 +1,16 @@
-use std::{fs, path::PathBuf};
+use std::{fs, path::PathBuf, usize};
 
+use binary_reader::BinaryReader;
 use serde::{Deserialize, Serialize};
+
+use crate::{db::starter_classes::vagabond, read::read::Read, save::{common::{save_slot::SaveSlot, user_data_10::ProfileSummary}, pc::pc_save::PCSave, save::save::Save}};
 
 #[derive(Clone, Serialize, Deserialize)]
 pub struct NyaSave {
     pub name: String,
     pub items: NyaItems,
     pub stats: NyaStats,
+    pub ver: Option<u32> // This gets added for validation
 }
 
 #[derive(Clone, Serialize, Deserialize)]
@@ -20,6 +24,22 @@ pub struct NyaStats {
     str: u16,
     vig: u16,
     vit: u16,
+}
+
+impl NyaSave {
+  pub fn get_profile_summary(&self) -> ProfileSummary {
+    let mut profile_summary = ProfileSummary::default();
+
+    profile_summary
+  }
+
+  pub fn as_save_slot(&self) -> SaveSlot {
+    let mut br = BinaryReader::from_u8(&vagabond());
+    br.set_endian(binary_reader::Endian::Little);
+    let save_slot = SaveSlot::read(&mut br);
+
+    save_slot.unwrap()
+  }
 }
 
 impl Default for NyaStats {
@@ -133,6 +153,7 @@ impl Default for NyaSave {
             name: String::default(),
             items: NyaItems::default(),
             stats: NyaStats::default(),
+            ver: None
         }
     }
 }

@@ -1,7 +1,7 @@
 pub mod general_view_model {
     use crate::{
         save::{nya::nya_save::NyaSave, save::save::Save},
-        vm::{importer::general_view_model::Character, vm::vm::ViewModel},
+        vm::{importer::general_view_model::Character, slot::slot_view_model::SlotViewModel, vm::vm::ViewModel},
     };
 
     pub struct ReplacerViewModel {
@@ -10,7 +10,7 @@ pub mod general_view_model {
         pub selected_to_index: usize,
         pub from_list: [Character; 0x10],
         pub to_list: [Character; 0x10],
-        from_save: NyaSave,
+        pub from_save: NyaSave,
     }
 
     impl Default for ReplacerViewModel {
@@ -59,11 +59,28 @@ pub mod general_view_model {
         }
 
         pub fn import_character(&mut self, to_save: &mut Save, vm: &mut ViewModel) {
+            // Retain slot version
+            let mut from_slot = self
+                .from_save
+                .clone();
+            let to_slot = to_save.save_type.get_slot(self.selected_to_index);
+            from_slot.ver = Some(to_slot.ver);
+
+            // Save Slot
+            to_save
+                .save_type
+                .set_slot(self.selected_to_index, &from_slot.as_save_slot());
+
+            // Profile Summary
+            to_save.save_type.set_profile_summary(
+                self.selected_to_index,
+                self.from_save
+                    .get_profile_summary(),
+            );
+
             // Refresh view model
             vm.slots[self.selected_to_index] =
-                crate::vm::slot::slot_view_model::SlotViewModel::from_save(
-                    to_save.save_type.get_slot(self.selected_to_index),
-                );
+                SlotViewModel::from_save(to_save.save_type.get_slot(self.selected_to_index));
         }
     }
 }
