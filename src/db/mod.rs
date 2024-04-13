@@ -15,6 +15,7 @@ pub mod map_name;
 pub mod maps;
 pub mod regions;
 pub mod stats;
+pub mod starter_classes;
 pub mod summoning_pools;
 pub mod talismans;
 pub mod weapon_name;
