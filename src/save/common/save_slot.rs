@@ -1871,3 +1871,25 @@ impl Write for SaveSlot {
         Ok(bytes)
     }
 }
+
+#[cfg(test)]
+mod tests {
+    use binary_reader::BinaryReader;
+
+    use super::*;
+    use std::fs;
+
+    #[test]
+    fn test_read_save_slot() {
+        let br = &mut BinaryReader::from_u8(&fs::read("./fixtures/vagabond.slot").expect("Test file should be present in fixtures"));
+        br.set_endian(binary_reader::Endian::Little);
+        // Attempt to read the PCSaveSlot
+        let result = SaveSlot::read(br);
+
+        assert!(result.is_ok());
+        let save_slot = result.unwrap();
+
+        // SaveSlot is mocked so default should be present
+        assert_eq!(save_slot.ver, 151);
+    }
+}
