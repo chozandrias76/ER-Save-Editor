@@ -51,7 +51,7 @@ impl Write for PCSaveSlot {
 
 #[cfg(test)]
 mod tests {
-    use binary_reader::BinaryReader;
+    use binary_reader::{BinaryReader, Endian};
 
     use super::*;
     use std::fs;
@@ -62,6 +62,7 @@ mod tests {
         // Create a mock binary file checksum
         let checksum_data = [156, 166, 241, 135, 131, 219, 101, 191, 157, 118, 71, 159, 124, 220, 37, 68]; // 16 bytes for checksum
         let br = &mut BinaryReader::from_u8(&fs::read("./fixtures/vagabond.pc_slot").expect("Test file should be present in fixtures"));
+        br.set_endian(Endian::Little);
 
         // Attempt to read the PCSaveSlot
         let result = PCSaveSlot::read(br);
@@ -73,6 +74,6 @@ mod tests {
         assert_eq!(pc_save_slot.checksum, checksum_data, "Checksum does not match");
 
         // SaveSlot is mocked so default should be present
-        assert_eq!(pc_save_slot.save_slot.ver, SaveSlot::default().ver);
+        assert_eq!(pc_save_slot.save_slot.ver, 151);
     }
 }

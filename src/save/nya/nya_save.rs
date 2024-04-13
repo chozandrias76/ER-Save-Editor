@@ -1,16 +1,15 @@
 use std::{fs, path::PathBuf, usize};
 
-use binary_reader::BinaryReader;
 use serde::{Deserialize, Serialize};
 
-use crate::{db::starter_classes::vagabond, read::read::Read, save::{common::{save_slot::SaveSlot, user_data_10::ProfileSummary}, pc::pc_save::PCSave, save::save::Save}};
+use crate::save::common::{save_slot::SaveSlot, user_data_10::ProfileSummary};
 
 #[derive(Clone, Serialize, Deserialize)]
 pub struct NyaSave {
     pub name: String,
     pub items: NyaItems,
     pub stats: NyaStats,
-    pub ver: Option<u32> // This gets added for validation
+    pub ver: Option<u32>, // This gets added for validation
 }
 
 #[derive(Clone, Serialize, Deserialize)]
@@ -27,19 +26,20 @@ pub struct NyaStats {
 }
 
 impl NyaSave {
-  pub fn get_profile_summary(&self) -> ProfileSummary {
-    let mut profile_summary = ProfileSummary::default();
+    pub fn get_profile_summary(&self) -> ProfileSummary {
+        let mut profile_summary = ProfileSummary::default();
 
-    profile_summary
-  }
+        profile_summary
+    }
 
-  pub fn as_save_slot(&self) -> SaveSlot {
-    let mut br = BinaryReader::from_u8(&vagabond());
-    br.set_endian(binary_reader::Endian::Little);
-    let save_slot = SaveSlot::read(&mut br);
+    pub fn as_save_slot(&self) -> SaveSlot {
+        // let mut br = BinaryReader::from_u8(&vagabond());
+        // br.set_endian(binary_reader::Endian::Little);
+        // let save_slot = SaveSlot::read(&mut br);
 
-    save_slot.unwrap()
-  }
+        // save_slot.unwrap()
+        SaveSlot::default()
+    }
 }
 
 impl Default for NyaStats {
@@ -87,14 +87,14 @@ pub struct NyaFlasks {
 }
 
 impl Default for NyaFlasks {
-  fn default() -> Self {
-      Self {
-        level: Default::default(),
-        total: Default::default(),
-        crimson: Default::default(),
-        cerulean: Default::default(),
-      }
-  }
+    fn default() -> Self {
+        Self {
+            level: Default::default(),
+            total: Default::default(),
+            crimson: Default::default(),
+            cerulean: Default::default(),
+        }
+    }
 }
 
 #[derive(Clone, Serialize, Deserialize)]
@@ -103,11 +103,11 @@ pub struct NyaAmmo {
 }
 
 impl Default for NyaAmmo {
-  fn default() -> Self {
-    Self {
-      slots: Default::default()
+    fn default() -> Self {
+        Self {
+            slots: Default::default(),
+        }
     }
-  }
 }
 #[derive(Clone, Serialize, Deserialize)]
 pub struct NyaTools {
@@ -116,12 +116,12 @@ pub struct NyaTools {
 }
 
 impl Default for NyaTools {
-  fn default() -> Self {
-    Self {
-      slots: Default::default(),
-      sorting: NyaToolsSorting::default()
+    fn default() -> Self {
+        Self {
+            slots: Default::default(),
+            sorting: NyaToolsSorting::default(),
+        }
     }
-  }
 }
 #[derive(Clone, Serialize, Deserialize)]
 pub struct NyaToolsSorting {
@@ -130,18 +130,19 @@ pub struct NyaToolsSorting {
 }
 
 impl Default for NyaToolsSorting {
-  fn default() -> Self {
-      Self {
-        method: String::default(),
-        direction: String::default(),
-      }
-  }
+    fn default() -> Self {
+        Self {
+            method: String::default(),
+            direction: String::default(),
+        }
+    }
 }
 
 impl NyaSave {
     pub fn from_path(path: &PathBuf) -> Result<Self, std::io::Error> {
         let data = fs::read_to_string(path).expect("Should have some data");
-        let nya_save: NyaSave = serde_json::from_str(&data).expect("Should have been able to deserialize");
+        let nya_save: NyaSave =
+            serde_json::from_str(&data).expect("Should have been able to deserialize");
 
         Ok(nya_save)
     }
@@ -153,7 +154,7 @@ impl Default for NyaSave {
             name: String::default(),
             items: NyaItems::default(),
             stats: NyaStats::default(),
-            ver: None
+            ver: None,
         }
     }
 }
