@@ -81,9 +81,9 @@ impl Write for WorldAreaWeather {
 pub struct PlayerCoords {
     pub player_coords: (f32, f32, f32),
     pub map_id: [u8; 4],
-    _0x11: [u8; 0x11],
+    pub _0x11: [u8; 0x11],
     pub player_coords2: (f32, f32, f32),
-    _0x10: [u8; 0x10],
+    pub _0x10: [u8; 0x10],
 }
 
 impl Default for PlayerCoords {
@@ -103,9 +103,9 @@ impl Read for PlayerCoords {
         let mut player_coords = PlayerCoords::default();
         player_coords.player_coords = (br.read_f32()?, br.read_f32()?, br.read_f32()?);
         player_coords.map_id.copy_from_slice(br.read_bytes(4)?);
-        let _0x11 = br.read_bytes(0x11)?;
+        player_coords._0x11.copy_from_slice(br.read_bytes(0x11)?);
         player_coords.player_coords2 = (br.read_f32()?, br.read_f32()?, br.read_f32()?);
-        let _0x10: &[u8] = br.read_bytes(0x10)?;
+        player_coords._0x10.copy_from_slice(br.read_bytes(0x10)?);
         Ok(player_coords)
     }
 }
@@ -1903,5 +1903,15 @@ mod tests {
         // Chapel of Anticipation
         let data: [u8; 4] = [0, 0, 1, 10];
         assert_eq!(save_slot.map_id, data);
+    }
+    #[test]
+    fn test_read_player_coords() {
+        let br = &mut BinaryReader::from_u8(&crate::db::starter_classes::vagabond());
+        br.set_endian(binary_reader::Endian::Little);
+        // Attempt to read the PCSaveSlot
+        let save_slot = <SaveSlot as crate::read::read::Read>::read(br).unwrap();
+
+        assert_eq!(save_slot.player_coords._0x10.as_slice(), vec![0x0 as u8; 16].as_slice());
+        assert_eq!(save_slot.player_coords._0x11.as_slice(), vec![0x0 as u8; 17].as_slice());
     }
 }
