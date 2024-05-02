@@ -858,6 +858,130 @@ impl InventoryViewModel {
     }
 }
 
+#[cfg(test)]
+mod tests {
+    use std::collections::HashMap;
+
+    use crate::save::common::save_slot::EquipInventoryItem;
+
+    use super::InventoryViewModel;
+
+    #[test]
+    fn test_inventory_view_model_fill_stroage_type() {
+        let br = &mut binary_reader::BinaryReader::from_u8(&crate::db::starter_classes::vagabond());
+        br.set_endian(binary_reader::Endian::Little);
+        // Attempt to read the PCSaveSlot
+        let save_slot =
+            &mut <crate::save::common::save_slot::SaveSlot as crate::read::read::Read>::read(br)
+                .unwrap();
+
+        save_slot.equip_inventory_data.common_items.push(
+            EquipInventoryItem{
+                ga_item_handle: crate::vm::inventory::InventoryGaitemType::WEAPON as u32,
+                quantity: 2,
+                inventory_index: 3
+            }
+        );
+        save_slot.equip_inventory_data.common_items.push(
+            EquipInventoryItem{
+                ga_item_handle: 4,
+                quantity: 5,
+                inventory_index: 6
+            }
+        );
+        save_slot.equip_inventory_data.key_items.push(
+            EquipInventoryItem{
+                ga_item_handle: 7,
+                quantity: 8,
+                inventory_index: 9
+            }
+        );
+        save_slot.equip_inventory_data.key_items.push(
+            EquipInventoryItem{
+                ga_item_handle: 10,
+                quantity: 11,
+                inventory_index: 12
+            }
+        );
+
+        let inventory_view_model = &mut InventoryViewModel::default();
+        let inventory_storage = &mut crate::vm::inventory::InventoryStorage::default();
+        let inventory_storage_index: usize = 0;
+
+        inventory_storage.common_items.push(
+            crate::vm::inventory::InventoryItemViewModel {
+                ga_item_handle: crate::vm::inventory::InventoryGaitemType::WEAPON as u32,
+                item_id: 1,
+                item_name: String::from("Fake"),
+                quantity: 1,
+                inventory_index: 1,
+                equip_index: 1,
+                r#type: crate::vm::inventory::InventoryGaitemType::WEAPON,
+            }
+        );
+        inventory_view_model.storage = vec![
+            inventory_storage.clone()
+        ];
+            
+        let mut ga_item = crate::save::common::save_slot::GaItem::default();
+        ga_item.gaitem_handle = crate::vm::inventory::InventoryGaitemType::WEAPON as u32;
+        inventory_view_model.gaitem_map = vec![
+            ga_item
+        ];
+
+        inventory_view_model.fill_stroage_type(
+            &save_slot.storage_inventory_data,
+            save_slot.storage_inventory_data.next_acquisition_sort_id,
+            save_slot.storage_inventory_data.next_equip_index,
+            inventory_storage_index,
+        );
+        let inventory_storage = &mut inventory_view_model.storage[inventory_storage_index];
+
+        assert_eq!(inventory_storage.filtered_weapons[0].item_id, 0);
+        assert_eq!(inventory_storage.filtered_armors[0].item_id, 0);
+        assert_eq!(inventory_storage.filtered_accessories[0].item_id, 0);
+        assert_eq!(inventory_storage.filtered_items[0].item_id, 0);
+        assert_eq!(inventory_storage.filtered_key_items[0].item_id, 0);
+        assert_eq!(inventory_storage.filtered_aows[0].item_id, 0);
+        assert_eq!(inventory_storage.common_item_count, 0);
+        assert_eq!(inventory_storage.key_item_count, 0);
+        assert_eq!(inventory_storage.next_acquisition_sort_order_index, 1);
+        assert_eq!(inventory_storage.next_equip_index, 0);
+    }
+
+    #[test]
+    fn test_inventory_view_model_from_save() {
+        let br = &mut binary_reader::BinaryReader::from_u8(&crate::db::starter_classes::vagabond());
+        br.set_endian(binary_reader::Endian::Little);
+        // Attempt to read the PCSaveSlot
+        let save_slot =
+            <crate::save::common::save_slot::SaveSlot as crate::read::read::Read>::read(br)
+                .unwrap();
+        let result = InventoryViewModel::from_save(&save_slot);
+
+        assert_eq!(result.at_single_items, true);
+
+        let bulk_items_selected_text =
+            std::fs::read_to_string("./fixtures/vagabond.bulk_items_selected.json")
+                .expect("Should have some data");
+        let bulk_items_selected: Vec<HashMap<u32, bool>> =
+            serde_json::from_str(&bulk_items_selected_text)
+                .expect("Should have been able to deserialize");
+
+        assert_eq!(result.bulk_items_selected, bulk_items_selected);
+
+        let gaitem_map_text = std::fs::read_to_string("./fixtures/vagabond.gaitem_map.json")
+            .expect("Should have some data");
+        let gaitem_map: Vec<crate::save::common::save_slot::GaItem> =
+            serde_json::from_str(&gaitem_map_text).expect("Should have been able to deserialize");
+        assert_eq!(result.gaitem_map, gaitem_map);
+
+        assert_eq!(result.part_gaitem_handle, 0 as u8);
+        assert_eq!(result.next_gaitem_handle, 1229 as u32);
+        assert_eq!(result.next_aow_index, 1 as usize);
+        assert_eq!(result.next_armament_or_armor_index, 1229 as usize);
+    }
+}
 // Splitting up inventory into multiple files
 mod add_bulk;
 mod add_single;

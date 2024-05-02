@@ -1,5 +1,6 @@
 use crate::{read::read::Read, write::write::Write};
 use binary_reader::BinaryReader;
+use serde::Deserialize;
 use std::io;
 
 #[derive(Clone)]
@@ -1412,7 +1413,7 @@ impl Write for PlayerGameData {
     }
 }
 
-#[derive(Copy, Clone)]
+#[derive(Copy, Clone, PartialEq, Debug, Deserialize)]
 pub struct GaItem {
     pub gaitem_handle: u32,
     pub item_id: u32,
@@ -1482,7 +1483,15 @@ impl Write for GaItem {
 #[derive(Clone)]
 pub struct SaveSlot {
     pub ver: u32,
+    /// map_id consisting of 4 distinct parts, each part represented by 1 byte.
+    ///
+    /// area_id: primary identifier for the map
+    ///
+    /// ...
+    ///
+    /// For more information, see the [WarpPlayer Instruction 2003\[14\]](https://soulsmods.github.io/emedf/er-emedf.html#WarpPlayer).
     pub map_id: [u8; 4],
+    /// Unknown
     _0x18: [u8; 0x18],
     pub ga_items: Vec<GaItem>,
     pub player_game_data: PlayerGameData,
@@ -1874,22 +1883,25 @@ impl Write for SaveSlot {
 
 #[cfg(test)]
 mod tests {
+    use std::{collections::HashMap, u8};
+
     use binary_reader::BinaryReader;
 
     use super::*;
-    use std::fs;
-
     #[test]
     fn test_read_save_slot() {
-        let br = &mut BinaryReader::from_u8(&fs::read("./fixtures/vagabond.slot").expect("Test file should be present in fixtures"));
+        let br = &mut BinaryReader::from_u8(&crate::db::starter_classes::vagabond());
         br.set_endian(binary_reader::Endian::Little);
         // Attempt to read the PCSaveSlot
-        let result = SaveSlot::read(br);
+        let result = <SaveSlot as crate::read::read::Read>::read(br);
 
         assert!(result.is_ok());
         let save_slot = result.unwrap();
 
-        // SaveSlot is mocked so default should be present
         assert_eq!(save_slot.ver, 151);
+        assert_ne!(save_slot.map_id, SaveSlot::default().map_id);
+        // Chapel of Anticipation
+        let data: [u8; 4] = [0, 0, 1, 10];
+        assert_eq!(save_slot.map_id, data);
     }
 }
