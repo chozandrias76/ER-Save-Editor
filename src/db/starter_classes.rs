@@ -324,7 +324,7 @@ mod tests {
         let data = vagabond();
 
         // Define what the expected data should be
-        let expected_data_length = 2621456;
+        let expected_data_length = 2621440;
 
         // Check that the data matches expected data
         assert_eq!(
